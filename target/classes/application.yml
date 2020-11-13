@@ -1,0 +1,107 @@
+spring:
+  profiles:
+    active: window-dev
+---
+server:
+  port: 0
+
+logging:
+  level:
+    yongs:
+      temp: DEBUG
+    com:
+      netflix:
+        eureka: OFF
+        discovery: OFF  
+      
+spring:
+  profiles: window-dev
+  application:
+    name: yongs-product
+  sleuth:
+    sampler:
+      probability: 1
+  zipkin:
+    baseUrl: http://localhost:9411/
+  data:
+    mongodb:
+      uri: mongodb://127.0.0.1:27017/flex  
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      group-id: product
+      enable-auto-commit: false
+      auto-offset-reset: latest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    listener:
+      ack-mode: manual-immediate
+
+filecontrol:
+  product-img-dir: D:\temp\product
+  
+eureka:
+  instance:
+    preferIpAddress: true
+    hostname: localhost
+    instanceId: ${spring.application.name}:${random.value}
+  client:
+    enabled: true
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:8761/eureka/
+
+---
+server:
+  port: 8080
+
+logging:
+  level:
+    yongs:
+      temp: DEBUG
+    com:
+      netflix:
+        eureka: OFF
+        discovery: OFF  
+      
+spring:
+  profiles: container
+  application:
+    name: yongs-product
+  sleuth:
+    sampler:
+      probability: 1
+  zipkin:
+    baseUrl: http://zipkin:9411/
+  data:
+    mongodb:
+      uri: mongodb://flex-mongo:27017/flex  
+  kafka:
+    bootstrap-servers: kafka:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      group-id: product
+      enable-auto-commit: false
+      auto-offset-reset: latest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    listener:
+      ack-mode: manual-immediate
+
+filecontrol:
+  product-img-dir: D:\temp\product
+  
+eureka:
+  instance:
+    preferIpAddress: true
+    hostname: eureka
+    instanceId: ${spring.application.name}:${random.value}
+  client:
+    enabled: true
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:8761/eureka/
+      
